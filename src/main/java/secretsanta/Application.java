@@ -12,6 +12,7 @@ import java.util.Random;
 import secretsanta.emails.EmailSender;
 import secretsanta.rules.NotSamePersonRule;
 import secretsanta.rules.NotSameSenderTwiceRule;
+import secretsanta.rules.NotSpecificCombinationRule;
 import secretsanta.rules.SantaRule;
 import secretsanta.rules.SantaRuleChecker;
 
@@ -27,7 +28,8 @@ public class Application {
 
 	private final static List<SantaRule> RULES = Arrays.asList( //
 			new NotSamePersonRule(), //
-			new NotSameSenderTwiceRule());
+			new NotSameSenderTwiceRule(), //
+			new NotSpecificCombinationRule("email address 2", "email address 1"));
 	private final static Map<String, String> PERSONS = Map.ofEntries( // f.e. entry("max.muster@muster.de", "max")
 			entry("email address 1", "nickname 1"), //
 			entry("email address 2", "nickname 2"), //
