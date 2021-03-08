@@ -3,8 +3,20 @@
   <groupId>com.maxjaen.app</groupId>
   <artifactId>wichteln</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  
-  <dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>9</source>
+					<target>9</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
 	  	<!-- https://mvnrepository.com/artifact/javax.mail/javax.mail-api -->
 		<dependency>
 		    <groupId>javax.mail</groupId>

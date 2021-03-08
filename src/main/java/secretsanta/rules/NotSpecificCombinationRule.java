@@ -1,19 +1,22 @@
 package secretsanta.rules;
 
+import secretsanta.model.User;
+
 import java.util.List;
 
 public class NotSpecificCombinationRule implements SantaRule {
 
-	private final String sender;
-	private final String recipient;
+	private final User giver;
+	private final User receiver;
 
-	public NotSpecificCombinationRule(final String sender, final String recipient) {
-		this.sender = sender;
-		this.recipient = recipient;
+	public NotSpecificCombinationRule(final User giver, final User receiver) {
+		this.giver = giver;
+		this.receiver = receiver;
 	}
 
 	@Override
-	public boolean test(final String sender, final String recipient, final List<String> assignedSenders) {
-		return ((this.sender != sender) || (this.recipient != recipient));
+	public boolean test(User giver, User receiver, List<User> alreadyAssignedReceivers) {
+		return !(giver.getUserEmail().equalsIgnoreCase(this.giver.getUserEmail())
+				&& receiver.getUserEmail().equalsIgnoreCase(this.receiver.getUserEmail()));
 	}
 }

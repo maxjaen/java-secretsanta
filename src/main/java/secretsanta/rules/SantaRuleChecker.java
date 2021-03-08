@@ -1,5 +1,7 @@
 package secretsanta.rules;
 
+import secretsanta.model.User;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class SantaRuleChecker {
 		}
 	}
 
-	public boolean check(final String sender, final String recipient, final List<String> assignedSenders) {
-		return this.santaRules.stream().allMatch(e -> e.test(sender, recipient, assignedSenders));
+	public boolean check(final User giver, final User receiver, final List<User> alreadyAssignedReceivers) {
+		return this.santaRules.stream().allMatch(e -> e.test(giver, receiver, alreadyAssignedReceivers));
 	}
 }
