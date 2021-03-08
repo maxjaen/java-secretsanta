@@ -12,6 +12,8 @@ import secretsanta.rules.SantaRule;
 import secretsanta.rules.SantaRuleChecker;
 
 public class SecretSantaGame {
+
+	public static final int MIN_USERS_COUNT = 3;
 	public static final int MAX_RECEIVER_RULE_CHECKS = 50;
 
 	private final List<User> users;
@@ -35,8 +37,8 @@ public class SecretSantaGame {
 	 * which should be checked during the creation of each user pair.
 	 */
 	public void run() {
-		if (this.users.size() < 3) {
-			throw new IllegalStateException("You need at least three recipients to play secret santa");
+		if (this.users.size() < MIN_USERS_COUNT) {
+			throw new IllegalStateException(String.format("You need at least %s recipients to play secret santa", MIN_USERS_COUNT));
 		}
 
 		final Map<User, User> giftPairs = createGiverReceiverPairs(this.users);
