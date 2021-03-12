@@ -28,7 +28,6 @@ class SecretSantaGameTest {
     public static final int MIN_USERS_COUNT = 3;
     public static final int MAX_RECEIVER_RULE_CHECKS = 50;
 
-    @InjectMocks
     private SecretSantaGame cut;
 
     @Mock
@@ -88,6 +87,45 @@ class SecretSantaGameTest {
         } catch (final IllegalStateException e) {
             assertThat(e.getMessage()) //
                 .isEqualTo(String.format("Cannot find valid receiver within %s tries.", MAX_RECEIVER_RULE_CHECKS));
+        }
+    }
+
+    @Test
+    void usersAreNull() {
+        try {
+
+            this.cut = new SecretSantaGame(null, this.rules, this.emailSender);
+
+            Assertions.fail("Expected NullPointerException.");
+        } catch (final NullPointerException e) {
+            assertThat(e.getMessage()) //
+                    .isEqualTo("Users should not be null.");
+        }
+    }
+
+    @Test
+    void rulesAreNull() {
+        try {
+
+            this.cut = new SecretSantaGame(this.users, null, this.emailSender);
+
+            Assertions.fail("Expected NullPointerException.");
+        } catch (final NullPointerException e) {
+            assertThat(e.getMessage()) //
+                    .isEqualTo("Rules should not be null.");
+        }
+    }
+
+    @Test
+    void emailSenderIsNull() {
+        try {
+
+            this.cut = new SecretSantaGame(this.users, this.rules, null);
+
+            Assertions.fail("Expected NullPointerException.");
+        } catch (final NullPointerException e) {
+            assertThat(e.getMessage()) //
+                    .isEqualTo("Email sender should not be null.");
         }
     }
 

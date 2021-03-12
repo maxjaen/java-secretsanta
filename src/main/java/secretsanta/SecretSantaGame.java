@@ -1,10 +1,6 @@
 package secretsanta;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import secretsanta.emails.EmailSender;
 import secretsanta.model.User;
@@ -26,9 +22,9 @@ public class SecretSantaGame {
 	public SecretSantaGame(List<User> users, List<SantaRule> rules, EmailSender emailSender) {
 		this.secretSantaPairs = new HashMap<>();
 		this.alreadyAssignedReceivers = new ArrayList<>();
-		this.users = users;
-		this.santaRuleChecker = new SantaRuleChecker(rules);
-		this.emailSender = emailSender;
+		this.users = Objects.requireNonNull(users, "Users should not be null.");
+		this.emailSender = Objects.requireNonNull(emailSender, "Email sender should not be null.");
+		this.santaRuleChecker = new SantaRuleChecker(Objects.requireNonNull(rules, "Rules should not be null."));
 	}
 
 	/**
@@ -43,6 +39,10 @@ public class SecretSantaGame {
 
 		final Map<User, User> giftPairs = createGiverReceiverPairs(this.users);
 		sendReceiverNamesToGivers(giftPairs);
+	}
+
+	public static User getRandomUser(final List<User> users) {
+		return users.get(new Random().nextInt(users.size()));
 	}
 
 	private Map<User, User> createGiverReceiverPairs(List<User> users) {
@@ -60,7 +60,7 @@ public class SecretSantaGame {
 				throw new IllegalStateException(String.format("Cannot find valid receiver within %s tries.", MAX_RECEIVER_RULE_CHECKS));
 			}
 
-			final User receiver = this.getRandomUser(this.users);
+			final User receiver = getRandomUser(this.users);
 			final boolean santaRuleFulfilled = santaRuleChecker.check(giver, receiver, this.alreadyAssignedReceivers);
 			if (santaRuleFulfilled) {
 				this.alreadyAssignedReceivers.add(receiver);
@@ -69,10 +69,6 @@ public class SecretSantaGame {
 			}
 			receiverTried++;
 		}
-	}
-
-	private User getRandomUser(final List<User> users) {
-		return users.get(new Random().nextInt(users.size()));
 	}
 
 	private void sendReceiverNamesToGivers(final Map<User, User> userPair) {
