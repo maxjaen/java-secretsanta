@@ -10,7 +10,7 @@ import secretsanta.rules.SantaRuleChecker;
 public class SecretSantaGame {
 
 	public static final int MIN_USERS_COUNT = 3;
-	public static final int MAX_RECEIVER_RULE_CHECKS = 50;
+	public static final int MAX_RECEIVER_RULE_CHECKS = 1000;
 
 	private final List<User> users;
 	private final SantaRuleChecker santaRuleChecker;

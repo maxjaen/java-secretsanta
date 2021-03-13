@@ -17,8 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -26,7 +25,7 @@ import static org.mockito.Mockito.verify;
 class SecretSantaGameTest {
 
     public static final int MIN_USERS_COUNT = 3;
-    public static final int MAX_RECEIVER_RULE_CHECKS = 50;
+    public static final int MAX_RECEIVER_RULE_CHECKS = 1000;
 
     private SecretSantaGame cut;
 
@@ -67,7 +66,9 @@ class SecretSantaGameTest {
         this.cut.run();
 
         verify(emailSender, times(this.users.size())).sendEmail( //
-                anyString(), eq("You will be the secret santa for ..."),  anyString());
+                argThat(new UserEmailMatcher(this.users)), //
+                eq("You will be the secret santa for ..."), //
+                argThat(new UserNameMatcher(this.users)));
     }
 
     @Test
@@ -144,5 +145,31 @@ class SecretSantaGameTest {
                 new NotSpecificCombinationRule( //
                         new User( "name 1", "email address 1"), //
                         new User( "name 2", "email address 2")));
+    }
+
+    private class UserEmailMatcher implements ArgumentMatcher<String> {
+        final List<User> users;
+
+        public UserEmailMatcher(final List<User> users) {
+            this.users = users;
+        }
+
+        @Override
+        public boolean matches(String input) {
+            return this.users.stream().map(User::getUserEmail).anyMatch(email -> input == email);
+        }
+    }
+
+    private class UserNameMatcher implements ArgumentMatcher<String> {
+        final List<User> users;
+
+        public UserNameMatcher(final List<User> users) {
+            this.users = users;
+        }
+
+        @Override
+        public boolean matches(String input) {
+            return this.users.stream().map(User::getUserName).anyMatch(name -> input == name);
+        }
     }
 }
