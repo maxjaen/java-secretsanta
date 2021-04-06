@@ -16,11 +16,9 @@ public class SecretSantaGame {
 	private final SantaRuleChecker santaRuleChecker;
 	private final EmailSender emailSender;
 
-	private final Map<User, User> secretSantaPairs;
-	final List<User> alreadyAssignedReceivers;
+	private final List<User> alreadyAssignedReceivers;
 
 	public SecretSantaGame(List<User> users, List<SantaRule> rules, EmailSender emailSender) {
-		this.secretSantaPairs = new HashMap<>();
 		this.alreadyAssignedReceivers = new ArrayList<>();
 		this.users = Objects.requireNonNull(users, "Users should not be null.");
 		this.emailSender = Objects.requireNonNull(emailSender, "Email sender should not be null.");
@@ -46,14 +44,16 @@ public class SecretSantaGame {
 	}
 
 	private Map<User, User> createGiverReceiverPairs(List<User> users) {
+		final Map<User, User> secretSantaPairs = new HashMap<>();
+
 		for (final User giver : users) {
-			pairGiverWithRandomReceiver(giver);
+			pairGiverWithRandomReceiver(giver, secretSantaPairs);
 		}
 
 		return secretSantaPairs;
 	}
 
-	private void pairGiverWithRandomReceiver(final User giver) {
+	private void pairGiverWithRandomReceiver(final User giver, final Map<User, User> secretSantaPairs) {
 		int receiverTried = 0;
 		while (true) {
 			if (receiverTried > MAX_RECEIVER_RULE_CHECKS) {
@@ -64,7 +64,7 @@ public class SecretSantaGame {
 			final boolean santaRuleFulfilled = santaRuleChecker.check(giver, receiver, this.alreadyAssignedReceivers);
 			if (santaRuleFulfilled) {
 				this.alreadyAssignedReceivers.add(receiver);
-				this.secretSantaPairs.put(giver, receiver);
+				secretSantaPairs.put(giver, receiver);
 				break;
 			}
 			receiverTried++;
